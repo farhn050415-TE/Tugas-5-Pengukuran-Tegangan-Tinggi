@@ -854,6 +854,70 @@ const Simulator: React.FC = () => {
              </ResponsiveContainer>
           </div>
 
+          {/* New Sections: Working Principles and Result Analysis */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                <h4 className="font-bold text-blue-900 mb-3 flex items-center gap-2">
+                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                   </svg>
+                   Prinsip Kerja (Working Principle)
+                </h4>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                   {mode === SimulatorMode.SPHERE_GAP && 
+                     "Metode Sela Bola bekerja berdasarkan Hukum Paschen. Ketika medan listrik di celah udara melampaui kekuatan dielektriknya (sekitar 30 kV/cm pada STP), terjadi ionisasi yang memicu loncatan bunga api (breakdown). Tegangan tembus (Vb) sangat bergantung pada diameter bola, jarak celah, serta faktor koreksi udara (suhu dan tekanan)."
+                   }
+                   {mode === SimulatorMode.RESISTIVE_DIVIDER && 
+                     "Pembagi tegangan resistif menggunakan hukum Ohm sederhana. Tegangan tinggi diturunkan secara proporsional menggunakan resistor HV (R1) bernilai sangat besar untuk meminimalkan arus dan panas, serta resistor LV (R2) untuk pengukuran. Vout = Vin × [R2 / (R1 + R2)]. Cocok untuk tegangan DC stabil."
+                   }
+                   {mode === SimulatorMode.CAPACITIVE_DIVIDER && 
+                     "Pembagi kapasitif memanfaatkan reaktansi kapasitif (Xc = 1/2πfC). Tegangan terbagi secara terbalik terhadap nilai kapasitansi: Vout ≈ Vin × (C1 / C2). Karena tidak mendisipasikan daya aktif (watt), metode ini sangat efisien dan akurat untuk pengukuran tegangan AC frekuensi tinggi atau tegangan impuls."
+                   }
+                </p>
+             </div>
+
+             <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
+                <h4 className="font-bold text-emerald-900 mb-3 flex items-center gap-2">
+                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                       <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 00-1-1H3zm6 4a1 1 0 100 2 1 1 0 000-2zm-2 4a1 1 0 100 2 1 1 0 000-2zm4 0a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
+                   </svg>
+                   Analisa Hasil Simulasi
+                </h4>
+                <p className="text-sm text-slate-700 leading-relaxed">
+                   {mode === SimulatorMode.SPHERE_GAP && (
+                     <>
+                        Pada kondisi lingkungan {temperature}°C dan {pressure} mmHg, faktor koreksi udara (δ) bernilai <strong>{sphereGapData.delta.toFixed(3)}</strong>. 
+                        Dengan jarak {gapDistance} cm, tegangan tembus teoritis adalah {sphereGapData.vb.toFixed(1)} kV. 
+                        Saat ini Vin = {vinSphere} kV. {sphereGapData.isBreakdown ? 
+                            <span className="text-red-600 font-bold">Terjadi BREAKDOWN karena Vin &gt; Vb. Udara kehilangan sifat isolasinya.</span> : 
+                            <span className="text-emerald-600 font-bold">Kondisi AMAN, isolasi udara masih mampu menahan tegangan.</span>
+                        }
+                     </>
+                   )}
+                   {mode === SimulatorMode.RESISTIVE_DIVIDER && (
+                     <>
+                        Rasio pembagi saat ini adalah <strong>{resistiveData.ratio.toFixed(0)}:1</strong>.
+                        Tegangan yang terbaca di sisi alat ukur adalah {resistiveData.vout.toFixed(1)} Volt.
+                        {resistiveData.isOverLimit ? 
+                           <span className="text-red-600 font-bold block mt-1">PERINGATAN BAHAYA: Tegangan output melebihi batas aman 600V! Segera perbesar nilai R1 atau perkecil Vin.</span> :
+                           <span className="text-emerald-600 block mt-1">Tegangan output dalam batas aman (Safe Operation Area).</span>
+                        }
+                     </>
+                   )}
+                   {mode === SimulatorMode.CAPACITIVE_DIVIDER && (
+                     <>
+                         Impedansi C1 jauh lebih tinggi daripada C2, menghasilkan rasio tegangan <strong>{capacitiveData.ratio.toFixed(0)}:1</strong>.
+                         Tegangan terukur: {capacitiveData.vout.toFixed(1)} Volt.
+                         {capacitiveData.isOverLimit ? 
+                           <span className="text-red-600 font-bold block mt-1">BAHAYA: Tegangan sekunder terlalu tinggi! Potensi kerusakan alat ukur. Naikkan nilai C2.</span> :
+                           <span className="text-emerald-600 block mt-1">Sistem beroperasi normal. Distribusi tegangan dielektrik stabil.</span>
+                        }
+                     </>
+                   )}
+                </p>
+             </div>
+          </div>
+
            {/* AI Explanation Section */}
            <div className="bg-gradient-to-br from-slate-50 to-indigo-50 p-6 rounded-2xl border border-indigo-100">
              <div className="flex justify-between items-center mb-4">
