@@ -147,8 +147,6 @@ const Simulator: React.FC = () => {
   // Helper for Jagged Lightning Path
   const generateJaggedPath = (startX: number, startY: number, endX: number, endY: number, segments: number, spread: number, timeVal: number) => {
     let path = `M ${startX} ${startY}`;
-    let currentX = startX;
-    let currentY = startY;
     const stepY = (endY - startY) / segments;
 
     for (let i = 1; i < segments; i++) {
@@ -158,8 +156,6 @@ const Simulator: React.FC = () => {
         const nextX = startX + noise + drift;
         const nextY = startY + (stepY * i);
         path += ` L ${nextX} ${nextY}`;
-        currentX = nextX;
-        currentY = nextY;
     }
     path += ` L ${endX} ${endY}`;
     return path;
