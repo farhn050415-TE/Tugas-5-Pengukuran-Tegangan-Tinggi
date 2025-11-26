@@ -1,0 +1,5 @@
+{
+  "name": "HV-Lab: Simulator Pengukuran Tegangan Tinggi",
+  "description": "Aplikasi edukasi interaktif untuk mempelajari teknik pengukuran tegangan tinggi menggunakan metode Selah Bola, Pembagi Resistif, dan Pembagi Kapasitif.",
+  "requestFramePermissions": []
+}
